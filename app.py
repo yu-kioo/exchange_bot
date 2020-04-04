@@ -1,5 +1,4 @@
-from flask import Flask
-import requests
+from flask import Flask, request
 
 app = Flask(__name__)
 
@@ -11,8 +10,11 @@ def index():
 
 @app.route("/post", methods=["POST"])
 def post():
-    hoge = requests.form["hoge"]
-    return hoge
+    # postのparamを取得
+    hoge = request.form["hoge"]
+    # getのparamの場合はこう
+    # request.args.get("hoge")
+    return f"postパラメータ：{hoge}"
 
 
 # おまじない
