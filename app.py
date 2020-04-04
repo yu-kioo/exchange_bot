@@ -4,9 +4,15 @@ import requests
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route("/")
 def index():
-    return 'Hello world!'
+    return "Hello world!"
+
+
+@app.route("/post", methods=["POST"])
+def post():
+    hoge = requests.form["hoge"]
+    return hoge
 
 
 # おまじない
