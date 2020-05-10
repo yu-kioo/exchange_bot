@@ -19,5 +19,15 @@
 ](https://qiita.com/fiftystorm36/items/b2fd47cf32c7694adc2e)
 
 ## Herokuへのデプロイ
+- 最低限必要なファイル
+  - 実行ファイル
+  - requirements.txt
+- option
+  - Procfile：
+
 - [HerokuにFlaskアプリ(hello world)をデプロイする方法まとめ
 ](https://tanuhack.com/deploy-flask-heroku/)
+
+## その他メモ
+- postの確認
+  - `curl -X POST -d '{"para1": val1, "para2": val2}' https://exchange-trading-bot.herokuapp.com/post`

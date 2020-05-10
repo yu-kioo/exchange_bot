@@ -11,10 +11,10 @@ def index():
 @app.route("/post", methods=["POST"])
 def post():
     # postのparamを取得
-    hoge = request.form["hoge"]
+    obj = request.get_data()
     # getのparamの場合はこう
     # request.args.get("hoge")
-    return f"postパラメータ：{hoge}"
+    return f"request:{obj}, : {type(obj)}"
 
 
 # おまじない
