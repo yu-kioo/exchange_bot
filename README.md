@@ -1,5 +1,4 @@
 ## 開発環境立ち上げ
-- `source venv/bin/activate`
 - `python app.py`
 
 ## Flask
@@ -18,15 +17,25 @@
   - [venv: Python 仮想環境管理
 ](https://qiita.com/fiftystorm36/items/b2fd47cf32c7694adc2e)
 
-## Herokuへのデプロイ
+
+## Heroku
+
+### deploy
 - 最低限必要なファイル
   - 実行ファイル
   - requirements.txt
 - option
-  - Procfile：
+  - Procfile
 
 - [HerokuにFlaskアプリ(hello world)をデプロイする方法まとめ
 ](https://tanuhack.com/deploy-flask-heroku/)
+
+### 環境変数
+```
+heroku login
+heroku config:set SECRET_KEY="SECRET_KEY" --app heroku_app_name
+heroku config --app {heroku_app_name}
+```
 
 ## その他メモ
 - postの確認
