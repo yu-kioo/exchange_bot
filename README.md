@@ -38,5 +38,7 @@ heroku config --app {heroku_app_name}
 ```
 
 ## その他メモ
+- requirements.txtの出力
+  - `pip freeze > requirements.txt`
 - postの確認
   - `curl -X POST -d '{"para1": val1, "para2": val2}' https://exchange-trading-bot.herokuapp.com/post`
