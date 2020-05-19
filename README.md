@@ -2,7 +2,7 @@
 - `python app.py`
 
 ## Flask
-- [official_doc](https://a2c.bitbucket.io/flask/)
+- [official-doc](https://a2c.bitbucket.io/flask/)
 
 ## venv管理
 
@@ -31,6 +31,10 @@
 ](https://tanuhack.com/deploy-flask-heroku/)
 
 ### 環境変数
+
+基本的な管理は python-dotenv
+
+#### heroku
 ```
 heroku login
 heroku config:set SECRET_KEY="SECRET_KEY" --app heroku_app_name

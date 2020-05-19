@@ -1,0 +1,5 @@
+{
+  "python.pythonPath": "/Users/yuki-tashiro/src/github.com/ooyu-kioo/trade_bot/venv/bin/python",
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true
+}

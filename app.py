@@ -17,11 +17,12 @@ class Mythread(threading.Thread):
     def run(self):
         try:
             # ここで処理を継続実行する
+            # Manage.new().run()
             while not self.stop_event.is_set():
                 print(datetime.now())
                 sleep(3)
         finally:
-            print("***** processing end *****")
+            print("***** thread process end *****")
 
 
 jobs = {}
@@ -40,6 +41,7 @@ def post():
     # request.args.get("hoge")
     return f"request:{obj}, : {type(obj)}"
 
+
 # thread実行群
 @app.route("/start/<id>/")
 def start(id):
@@ -51,9 +53,6 @@ def start(id):
 
 @app.route("/stop/<id>/")
 def stop(id):
-
-    print(jobs)
-
     jobs[id].stop()
     del jobs[id]
     return make_response(f'{id}の中止処理を受け付けました\n'), 202
