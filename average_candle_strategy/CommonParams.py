@@ -6,7 +6,6 @@ from dotenv import load_dotenv, find_dotenv
 共通の定数・環境変数
 """
 
-
 load_dotenv(find_dotenv())
 
 # TODO：class化する？意味はある？
@@ -15,8 +14,10 @@ ACCOUNT_ID = os.getenv("ACCOUNT_ID")
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 TRADE_ENV = os.getenv("TRADE_ENV")
 
-# TODO：複数通貨使用するならデータまとめる
 USD_JPY = "USD/JPY"
+
+BUY = "BUY"
+SELL = "SELL"
 
 # 注文タイプ
 ORDER_TYPE = {

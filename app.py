@@ -1,9 +1,21 @@
 from flask import Flask, request, make_response
 import threading
 from datetime import datetime
-from time import sleep
+import time
+
+# user_defined
+from average_candle_strategy.Manager import Manager
+from average_candle_strategy.CommonParams import USD_JPY
 
 app = Flask(__name__)
+
+
+def test():
+    count = 0
+    while True:
+        count += 1
+        print(f" count：{count} ")
+        time.sleep(1)
 
 
 class Mythread(threading.Thread):
@@ -16,11 +28,8 @@ class Mythread(threading.Thread):
 
     def run(self):
         try:
-            # ここで処理を継続実行する
-            # Manage.new().run()
             while not self.stop_event.is_set():
-                print(datetime.now())
-                sleep(3)
+                test()
         finally:
             print("***** thread process end *****")
 

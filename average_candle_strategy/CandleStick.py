@@ -19,7 +19,6 @@ from CommonParams import ACCOUNT_ID, ACCESS_TOKEN, TRADE_ENV
 
 # TODO：ここcandleのデータのみを保持するdata_objと振る舞い分離した方がすっきりする？
 class CandleStick:
-
     def __init__(self, instrument, time_frame):
         self.client = API(access_token=ACCESS_TOKEN, environment=TRADE_ENV)
         self.instrument = instrument
