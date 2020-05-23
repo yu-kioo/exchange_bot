@@ -5,7 +5,7 @@ import oandapyV20.endpoints.positions as positions  # 決済・保有中の注�
 from oandapyV20 import API
 from oandapyV20.exceptions import V20Error
 # user defined
-from CommonParams import ACCESS_TOKEN, TRADE_ENV, TRADE_ENV
+from average_candle_strategy.CommonParams import ACCESS_TOKEN, TRADE_ENV, TRADE_ENV
 
 """
 売買の可否を判断する

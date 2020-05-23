@@ -10,7 +10,7 @@ from oandapyV20 import API
 from oandapyV20.exceptions import V20Error
 
 # user defined
-from CommonParams import ACCOUNT_ID, ACCESS_TOKEN, TRADE_ENV
+from average_candle_strategy.CommonParams import ACCOUNT_ID, ACCESS_TOKEN, TRADE_ENV
 
 """
 現在・過去価格の取得

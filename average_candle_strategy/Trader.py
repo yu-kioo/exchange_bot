@@ -3,7 +3,7 @@ import oandapyV20.endpoints.orders as orders  # 注文の発注
 import oandapyV20.endpoints.positions as positions  # 決済・保有中の注文
 from oandapyV20.exceptions import V20Error
 # user defined
-from CommonParams import ACCOUNT_ID, ACCESS_TOKEN, TRADE_ENV
+from average_candle_strategy.CommonParams import ACCOUNT_ID, ACCESS_TOKEN, TRADE_ENV
 
 """
 発注・ポジションの確認・決済

@@ -1,4 +1,5 @@
-from CommonParams import BUY, SELL, ORDER_TYPE
+# user defined
+from average_candle_strategy.CommonParams import BUY, SELL, ORDER_TYPE
 
 
 """

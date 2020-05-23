@@ -3,11 +3,12 @@ import json
 from oandapyV20.exceptions import V20Error
 
 # user defined
-from CommonParams import USD_JPY, BUY, SELL
-from CandleStick import CandleStick
-from OrderData import OrderData
-from Strategy import Strategy
-from Trader import Trader
+# TODO：pathの書き方
+from average_candle_strategy.CommonParams import USD_JPY, BUY, SELL
+from average_candle_strategy.CandleStick import CandleStick
+from average_candle_strategy.OrderData import OrderData
+from average_candle_strategy.Strategy import Strategy
+from average_candle_strategy.Trader import Trader
 
 """
 一連のトレード処理を組み立てる
