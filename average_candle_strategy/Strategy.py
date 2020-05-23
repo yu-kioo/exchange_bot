@@ -24,13 +24,13 @@ class Strategy:
 
     # 指定した範囲の中で転換足が一定数出現したか
     # count = 転換足の本数, y_range = 値幅
-    def is_multi_diversion(self, avg_candle_df, count=2, y_range=0.04):
+    def is_multi_diversion(self, avg_candle_df, count=2):
 
         # 最新からx_range範囲に転換足があるか
         # TODO：ここの処理汚くね。。？
         flags = [self.__is_diversion_candle(
             avg_candle_df.iloc[-i]) for i in range(1, self.DECISION_NUM + 1)]
-        if (len(list(filter(lambda x: x == True, flags))) >= 2):
+        if (len(list(filter(lambda x: x == True, flags))) >= count):
             return True
         else:
             return False
