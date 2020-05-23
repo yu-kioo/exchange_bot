@@ -1,7 +1,7 @@
+from concurrent.futures import ThreadPoolExecutor
 from flask import Flask, request, make_response
-import threading
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-import time
 
 # user_defined
 from average_candle_strategy.Manager import Manager
@@ -9,32 +9,9 @@ from average_candle_strategy.CommonParams import USD_JPY
 
 app = Flask(__name__)
 
-
-def test():
-    count = 0
-    while True:
-        count += 1
-        print(f" count：{count} ")
-        time.sleep(1)
-
-
-class Mythread(threading.Thread):
-    def __init__(self):
-        super(Mythread, self).__init__()
-        self.stop_event = threading.Event()
-
-    def stop(self):
-        self.stop_event.set()
-
-    def run(self):
-        try:
-            while not self.stop_event.is_set():
-                test()
-        finally:
-            print("***** thread process end *****")
-
-
-jobs = {}
+# thread実行instance
+executor = ThreadPoolExecutor(max_workers=2)
+avg_candle_strategy = Manager(USD_JPY)
 
 
 @app.route("/")
@@ -52,27 +29,16 @@ def post():
 
 
 # thread実行群
-@app.route("/start/<id>/")
-def start(id):
-    thread = Mythread()
-    thread.start()
-    jobs[id] = thread
-    return make_response(f'{id}の処理を受け付けました\n'), 202
+@app.route("/average_candle_strategy/start")
+def start_avg_candle_strategy():
+    executor.submit(avg_candle_strategy.run)
+    return "start average_candle_strategy!"
 
 
-@app.route("/stop/<id>/")
-def stop(id):
-    jobs[id].stop()
-    del jobs[id]
-    return make_response(f'{id}の中止処理を受け付けました\n'), 202
-
-
-@app.route("/status/<id>/")
-def status(id):
-    if id in jobs:
-        return make_response(f'{id}は実行中です\n'), 200
-    else:
-        return make_response(f'{id}は実行していません\n'), 200
+@app.route("/average_candle_strategy/stop")
+def stop_avg_candle_strategy():
+    avg_candle_strategy.status = False
+    return "stop average_candle_strategy!"
 
 
 # おまじない
