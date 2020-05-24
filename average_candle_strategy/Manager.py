@@ -1,5 +1,7 @@
 import pandas as pd
 import json
+from datetime import datetime, date, time, timedelta
+from pytz import timezone
 from oandapyV20.exceptions import V20Error
 
 # user defined
@@ -21,40 +23,52 @@ class Manager:
 
     def __init__(self, instrument):
         self.status = True
-        # 他のクラスのインスタンスを生成
         self.candle_stick = CandleStick(USD_JPY, "M5")
         self.strategy = Strategy()
         self.trader = Trader()
 
     def run(self):
+        err_count = 0
         while self.status:
+            # TODO：いい感じに変える
+            if self.__is_market_open():
+                time.sleep(300)
             try:
                 for line in self.candle_stick.streaming_price():
                     if ("bids" in line):  # 価格が更新されてたら
 
                         if self.trader.has_open_positions():
                             continue
-
                         # TODO：データ更新の実行はエントリー足の間隔でいい
                         # fixed_candle, avg_candleのデータ更新
                         self.candle_stick.fixed_candle_df()
                         self.candle_stick.avg_candle_df()
 
-                        print("exec strategy")
-
                         # エントリー可能な場合、ポジション発注
                         if self.__can_entry():
-                            self.__log("entry")
+                            self.__log("***** entry *****")
                             self.__entry()
 
             except V20Error as e:
-                print("Error! continue process....")
+                if err_count > 3:
+                    self.status = False
                 print(e)
-                pass
+                print("***** continue process... *****")
+                err_count += 1
+        print("***** process end *****")
 
     # #######
     # private
     # #######
+
+    def __is_market_open(self):
+        market_open = time(7)
+        market_close = time(4)
+        current_time = (datetime.now() + timedelta(hours=9))
+        day_of_week = current_time.today().weekday()
+        # 月曜〜土曜の指定期間内
+        # TODO：綺麗な条件分けない？
+        return ((day_of_week is 0) and (market_open < current_time.time())) and ((day_of_week is 5) and (current_time.time() < market_close)) and (day_of_week is not 6)
 
     # strategyの判定実行
     def __can_entry(self):
