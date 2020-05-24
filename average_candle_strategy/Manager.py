@@ -22,6 +22,8 @@ class Manager:
     LOT = 1000
 
     def __init__(self, instrument):
+        if self.__is_market_open():
+            time.sleep(300)
         self.status = True
         self.candle_stick = CandleStick(USD_JPY, "M5")
         self.strategy = Strategy()
