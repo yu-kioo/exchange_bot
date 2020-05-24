@@ -25,8 +25,8 @@ class Trader:
         return True if len(self.__open_positions()["positions"]) > 0 else False
 
     # 決済
-    # TODO：short, longでall, parts別に対応する
     def close_long_positions(self):
+        # TODO：position存在を確認するガード節いれる
         data = {"longUnits": "ALL"}
         order = positions.PositionClose(
             accountID=ACCOUNT_ID, data=data, instrument="USD_JPY")
@@ -35,6 +35,7 @@ class Trader:
         return order.response
 
     def close_short_positions(self):
+        # TODO：position存在を確認するガード節いれる
         data = {"shortUnits": "ALL"}
         order = positions.PositionClose(
             accountID=ACCOUNT_ID, data=data, instrument="USD_JPY")

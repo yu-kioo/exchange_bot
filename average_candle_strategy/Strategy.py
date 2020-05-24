@@ -23,7 +23,7 @@ class Strategy:
         self.client = API(access_token=ACCESS_TOKEN, environment=TRADE_ENV)
 
     # 指定した範囲の中で転換足が一定数出現したか
-    # count = 転換足の本数, y_range = 値幅
+    # count = 転換足の本数
     def is_multi_diversion(self, avg_candle_df, count=2):
 
         # 最新からx_range範囲に転換足があるか
