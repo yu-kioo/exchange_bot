@@ -9,9 +9,8 @@ from average_candle_strategy.CommonParams import USD_JPY
 
 app = Flask(__name__)
 
-# thread実行instance
-executor = ThreadPoolExecutor(max_workers=2)
-avg_candle_strategy = Manager(USD_JPY)
+executor = ThreadPoolExecutor(max_workers=2)  # thread実行instance
+jobs = {}
 
 
 @app.route("/")
@@ -31,14 +30,22 @@ def post():
 # thread実行群
 @app.route("/average_candle_strategy/start")
 def start_avg_candle_strategy():
+    avg_candle_strategy = Manager(USD_JPY)
+    jobs["avg_candle_strategy"] = avg_candle_strategy
     executor.submit(avg_candle_strategy.run)
     return "start average_candle_strategy!"
 
 
 @app.route("/average_candle_strategy/stop")
 def stop_avg_candle_strategy():
-    avg_candle_strategy.status = False
+    jobs["avg_candle_strategy"].status = False
+    del(jobs["avg_candle_strategy"])
     return "stop average_candle_strategy!"
+
+
+@app.route("/thread/running")
+def running_threads():
+    return jobs.keys
 
 
 # おまじない

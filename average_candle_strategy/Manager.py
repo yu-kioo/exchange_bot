@@ -30,7 +30,7 @@ class Manager:
         self.trader = Trader()
 
     def run(self):
-        print("***** execute process... *****")
+        print("*** execute process... ***")
         err_count = 0
         while self.status:
             # TODO：いい感じに変える
@@ -39,10 +39,11 @@ class Manager:
             try:
                 for line in self.candle_stick.streaming_price():
                     if ("bids" in line):  # 価格が更新されてたら
-                        print(f"current price：{line['bids'][0]['price']}")
+                        print(
+                            f"*** current price：{line['bids'][0]['price']} ***")
 
                         if self.trader.has_open_positions():
-                            print("you have open positions")
+                            print("*** you have open positions ***")
                             continue
                         # TODO：データ更新の実行はエントリー足の間隔でいい
                         # fixed_candle, avg_candleのデータ更新
@@ -51,18 +52,18 @@ class Manager:
 
                         # エントリー可能な場合、ポジション発注
                         if self.__can_entry():
-                            print("***** entry *****")
+                            print("*** entry ***")
                             self.__entry()
                         else:
-                            print("***** can't entry *****")
+                            print("*** can't entry ***")
 
             except V20Error as e:
                 if err_count > 3:
                     self.status = False
                 print(e)
-                print("***** continue process... *****")
+                print("*** continue process... ***")
                 err_count += 1
-        print("***** process end *****")
+        print("*** process end ***")
 
     # #######
     # private
