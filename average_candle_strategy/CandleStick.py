@@ -39,6 +39,7 @@ class CandleStick:
     # 過去のロウソク足データ取得
     def fixed_candle_df(self):
         data = self.__fixed_candle_data()
+        print(data)
         self.fixed_candles = self.__cleaning_and_to_df(data)
         return self.__cleaning_and_to_df(data)
 
