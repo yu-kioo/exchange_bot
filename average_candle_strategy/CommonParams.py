@@ -14,7 +14,7 @@ ACCOUNT_ID = os.getenv("ACCOUNT_ID")
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 TRADE_ENV = os.getenv("TRADE_ENV")
 
-USD_JPY = "USD/JPY"
+USD_JPY = "USD_JPY"
 
 BUY = "BUY"
 SELL = "SELL"
