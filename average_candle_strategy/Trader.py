@@ -20,9 +20,18 @@ class Trader:
         self.client.request(order)
         return order.response
 
-    # ポジション
     def has_open_positions(self):
-        return True if len(self.__open_positions()["positions"]) > 0 else False
+        return len(self.__open_positions()["positions"]) > 0
+
+    def has_pending_positions(self):
+        return not (len(self.pending_order_ids()) == 0)
+
+    # 未成約注文
+    def pending_order_ids(self):
+        req = orders.OrdersPending(ACCOUNT_ID)
+        self.client.request(req)
+        result = [x["id"] for x in req.response["orders"]]
+        return result
 
     # 決済
     def close_long_positions(self):
@@ -42,6 +51,12 @@ class Trader:
 
         self.client.request(order)
         return order.response
+
+    # オーダーキャンセル
+    def cancel_order(self, id):
+        req = orders.OrderCancel(ACCOUNT_ID, orderID=id)
+        self.client.request(req)
+        return r.response
 
     # トレイリング
     def trailing(self):

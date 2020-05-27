@@ -37,6 +37,7 @@ class Manager:
             if self.__is_market_open():
                 time.sleep(300)
             try:
+                # TODO：なんかネストがすごいな。。。
                 for line in self.candle_stick.streaming_price():
                     if ("bids" in line):  # 価格が更新されてたら
                         print(
@@ -44,6 +45,11 @@ class Manager:
 
                         if self.trader.has_open_positions():
                             print("*** you have open positions ***")
+                            # pendingの注文があった場合キャンセル
+                            if self.trader.has_pending_positions():
+                                for id in self.trader.pending_order_ids():
+                                    self.trader.cancel_order(id)
+                                    print(f"*** canceled order：{id} ***")
                             continue
                         # TODO：データ更新の実行はエントリー足の間隔でいい
                         # fixed_candle, avg_candleのデータ更新
