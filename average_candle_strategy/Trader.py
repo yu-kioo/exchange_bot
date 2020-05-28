@@ -1,3 +1,4 @@
+import json
 from oandapyV20 import API
 import oandapyV20.endpoints.orders as orders  # 注文の発注
 import oandapyV20.endpoints.positions as positions  # 決済・保有中の注文
@@ -16,6 +17,8 @@ class Trader:
 
     # 発注
     def order(self, data):
+        if type(data) is not str:
+            data = json.dumps(data)
         order = orders.OrderCreate(ACCOUNT_ID, data=data)
         self.client.request(order)
         return order.response

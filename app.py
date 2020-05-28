@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 executor = ThreadPoolExecutor(max_workers=2)  # thread実行instance
 jobs = {}
+futures = {}
 
 
 @app.route("/")
@@ -32,15 +33,28 @@ def post():
 def start_avg_candle_strategy():
     avg_candle_strategy = Manager(USD_JPY)
     jobs["avg_candle_strategy"] = avg_candle_strategy
-    executor.submit(avg_candle_strategy.run)
+    future = executor.submit(avg_candle_strategy.run)
+    futures["avg_candle_strategy"] = future
     return "start average_candle_strategy!"
 
 
 @app.route("/average_candle_strategy/stop")
 def stop_avg_candle_strategy():
     jobs["avg_candle_strategy"].status = False
+
+    print(f"class status = {jobs['avg_candle_strategy'].status}")
+
     del(jobs["avg_candle_strategy"])
-    return "stop average_candle_strategy!"
+    futures["avg_candle_strategy"].cancel()
+
+    result = "stop average_candle_strategy!" if futures["avg_candle_strategy"].done(
+    ) else "running avg_candle_strategy"
+
+    del(futures["avg_candle_strategy"])
+
+    executor.shutdown(wait=False)
+
+    return result
 
 
 @app.route("/thread/running")
