@@ -22,8 +22,10 @@ class Manager:
     LOT = 1000
 
     def __init__(self, instrument):
-        if self.__is_market_open():
+        while not self.__is_market_open():
             time.sleep(300)
+            continue
+        # TODO:不必要なfield化なくす
         self.status = True
         self.candle_stick = CandleStick(USD_JPY, "M5")
         self.strategy = Strategy()
@@ -34,8 +36,9 @@ class Manager:
         err_count = 0
         while self.status:
             # TODO：いい感じに変える
-            if self.__is_market_open():
+            if not self.__is_market_open():
                 time.sleep(300)
+                continue
             try:
                 # TODO：なんかネストがすごいな。。。
                 for line in self.candle_stick.streaming_price():
@@ -45,9 +48,9 @@ class Manager:
 
                         if self.trader.has_open_positions():
                             print("*** you have open positions ***")
-                            # pendingの注文があった場合キャンセル
-                            if self.trader.has_pending_positions():
-                                for id in self.trader.pending_order_ids():
+                            # pendingの指値注文があった場合キャンセル
+                            if self.trader.has_pending_limit_orders():
+                                for id in self.trader.pending_limit_order_ids():
                                     self.trader.cancel_order(id)
                                     print(f"*** canceled order：{id} ***")
                             continue
@@ -60,8 +63,6 @@ class Manager:
                         if self.__can_entry():
                             print("*** entry ***")
                             self.__entry()
-                        else:
-                            print("*** can't entry ***")
 
             except V20Error as e:
                 if err_count > 3:
@@ -82,7 +83,7 @@ class Manager:
         day_of_week = current_time.today().weekday()
         # 月曜〜土曜の指定期間内
         # TODO：綺麗な条件分けない？
-        return ((day_of_week is 0) and (market_open < current_time.time())) and ((day_of_week is 5) and (current_time.time() < market_close)) and (day_of_week is not 6)
+        return ((day_of_week == 0) and (market_open < current_time.time())) and ((day_of_week == 5) and (current_time.time() < market_close)) and (day_of_week != 6)
 
     # strategyの判定実行
     def __can_entry(self):
@@ -94,8 +95,16 @@ class Manager:
         p_price = self.strategy.profit_price(self.candle_stick.avg_candles)
         l_price = self.strategy.loss_cut_price(self.candle_stick.avg_candles)
 
+        buy_data = OrderData(USD_JPY, BUY, self.LOT).limit_order(
+            str(e_price["buy"]), str(p_price["buy"]), str(l_price["buy"]))
+        sell_data = OrderData(USD_JPY, BUY, self.LOT).limit_order(
+            str(e_price["sell"]), str(p_price["sell"]), str(l_price["sell"]))
+
+        print(">>> buy_data")
+        print(buy_data)
+        print(">>> sell_data")
+        print(sell_data)
+
         # 発注
-        self.trader.order(OrderData(USD_JPY, BUY, self.LOT).limit_order(
-            e_price["buy"], p_price["buy"], l_price["buy"])).order()
-        self.trader.order(OrderData(USD_JPY, BUY, self.LOT).limit_order(
-            e_price["sell"], p_price["sell"], l_price["sell"])).order()
+        self.trader.order(buy_data)
+        self.trader.order(sell_data)
