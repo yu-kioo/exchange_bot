@@ -1,3 +1,11 @@
+# exchange_bot
+
+為替を自動売買して遊ぶbot
+
+
+## 以下ただのメモでしかない
+***
+
 ## 開発環境立ち上げ
 - `python app.py`
 
@@ -6,16 +14,15 @@
 
 ## venv管理
 
-- 仮想環境の起動
-  - `source venv/bin/activate`
-- 解除
-  - `deactivate`
-- pythonのversion確認
-  - `python -V`
+- 仮想環境の起動：`source venv/bin/activate`
+- 解除：`deactivate`
+- pythonのversion確認：`python -V`
 
 - ref
   - [venv: Python 仮想環境管理
 ](https://qiita.com/fiftystorm36/items/b2fd47cf32c7694adc2e)
+  - [venvで作成した仮想環境内のPythonバージョンを変更したい
+](https://dev.classmethod.jp/articles/change-venv-python-version/)
 
 
 ## Heroku
@@ -34,7 +41,7 @@
 
 基本的な管理は python-dotenv
 
-#### heroku
+#### console
 ```
 heroku login
 heroku config:set SECRET_KEY="SECRET_KEY" --app heroku_app_name
