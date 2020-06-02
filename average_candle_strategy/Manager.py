@@ -1,7 +1,6 @@
 import pandas as pd
 import json
-from datetime import datetime, date, time, timedelta
-from pytz import timezone
+from datetime import datetime, date, time, timedelta, timezone
 from oandapyV20.exceptions import V20Error
 
 # user defined
@@ -23,6 +22,7 @@ class Manager:
 
     def __init__(self, instrument):
         while not self.__is_market_open():
+            print("market is closed")
             time.sleep(300)
             continue
         # TODO:不必要なfield化なくす
@@ -37,6 +37,7 @@ class Manager:
         while self.status:
             # TODO：いい感じに変える
             if not self.__is_market_open():
+                print("market is closed")
                 time.sleep(300)
                 continue
             try:
@@ -79,11 +80,17 @@ class Manager:
     def __is_market_open(self):
         market_open = time(7)
         market_close = time(4)
-        current_time = (datetime.now() + timedelta(hours=9))
+        current_time = datetime.now(timezone(timedelta(hours=+9), 'JST'))
         day_of_week = current_time.today().weekday()
         # 月曜〜土曜の指定期間内
         # TODO：綺麗な条件分けない？
-        return ((day_of_week == 0) and (market_open < current_time.time())) and ((day_of_week == 5) and (current_time.time() < market_close)) and (day_of_week != 6)
+        is_after_open_time = (
+            (day_of_week == 0) and (market_open < current_time.time())
+        )
+        is_before_close_time = (
+            (day_of_week == 5) and (current_time.time() < market_close)
+        )
+        return is_after_open_time or is_before_close_time or (1 <= day_of_week <= 4)
 
     # strategyの判定実行
     def __can_entry(self):
