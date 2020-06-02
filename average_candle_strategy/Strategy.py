@@ -42,21 +42,21 @@ class Strategy:
         high_price = [avg_candle_df.iloc[i].high for i in ids]
         low_price = [avg_candle_df.iloc[i].low for i in ids]
 
-        return {"buy": max(high_price) + self.ENTRY_RANGE, "sell": min(low_price) - self.ENTRY_RANGE}
+        return {"buy": round(max(high_price) + self.ENTRY_RANGE, 3), "sell": round(min(low_price) - self.ENTRY_RANGE, 3)}
 
     # 利確ラインを定める
     def profit_price(self, avg_candle_df):
         e_price = self.entry_price(avg_candle_df)
         profit_range = self.__diversion_candles_range(avg_candle_df)
         # エントリー価格から転換足の値幅分
-        return {"buy": e_price["buy"] + profit_range, "sell": e_price["sell"] - profit_range}
+        return {"buy": round(e_price["buy"] + profit_range, 3), "sell": round(e_price["sell"] - profit_range, 3)}
 
     # 損切りラインを定める
     def loss_cut_price(self, avg_candle_df):
         # エントリーラインと反対の値から少し距離をおいた値
         e_price = self.entry_price(avg_candle_df)
 
-        return {"buy": e_price["sell"] - self.LOSS_CUT_RNAGE, "sell": e_price["buy"] + self.LOSS_CUT_RNAGE}
+        return {"buy": round(e_price["sell"] - self.LOSS_CUT_RNAGE, 3), "sell": round(e_price["buy"] + self.LOSS_CUT_RNAGE, 3)}
 
     # #######
     # private
