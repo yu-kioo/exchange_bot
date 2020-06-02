@@ -12,28 +12,42 @@ from average_candle_strategy.CommonParams import ACCOUNT_ID, ACCESS_TOKEN, TRADE
 
 
 class Trader:
+    LIMIT = "LIMIT"
+
     def __init__(self):
         self.client = API(access_token=ACCESS_TOKEN, environment=TRADE_ENV)
 
     # 発注
     def order(self, data):
-        if type(data) is not str:
-            data = json.dumps(data)
+        print(">>> Trader::order")
         order = orders.OrderCreate(ACCOUNT_ID, data=data)
         self.client.request(order)
-        return order.response
+        print(">>> response")
+        print(order.response)
 
     def has_open_positions(self):
         return len(self.__open_positions()["positions"]) > 0
 
-    def has_pending_positions(self):
+    def has_pending_orders(self):
         return not (len(self.pending_order_ids()) == 0)
+
+    def has_pending_limit_orders(self):
+        return not (len(self.pending_limit_order_ids()) == 0)
 
     # 未成約注文
     def pending_order_ids(self):
         req = orders.OrdersPending(ACCOUNT_ID)
         self.client.request(req)
         result = [x["id"] for x in req.response["orders"]]
+        return result
+
+    # 未成約指値注文
+    def pending_limit_order_ids(self):
+        req = orders.OrdersPending(ACCOUNT_ID)
+        self.client.request(req)
+        result = [
+            x["id"]for x in req.response["orders"] if x["type"] == self.LIMIT
+        ]
         return result
 
     # 決済
@@ -56,10 +70,13 @@ class Trader:
         return order.response
 
     # オーダーキャンセル
+    # TODO:idsを使ってfor文内部で使用することをManagerが知ってるので隠蔽する
     def cancel_order(self, id):
         req = orders.OrderCancel(ACCOUNT_ID, orderID=id)
         self.client.request(req)
-        return r.response
+        print(">>> cancel order")
+        print(f">>> {req.response}")
+        return req.response
 
     # トレイリング
     def trailing(self):
