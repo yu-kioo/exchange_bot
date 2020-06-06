@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import time
 from datetime import datetime, date, time, timedelta, timezone
 from oandapyV20.exceptions import V20Error
 
