@@ -23,8 +23,7 @@ class Manager:
 
     def __init__(self, instrument):
         while not self.__is_market_open():
-            print("market is closed")
-            time.sleep(300)
+            self.__wait_while_market_close()
             continue
         self.status = True
         self.candle_stick = CandleStick(USD_JPY, "M5")
@@ -35,8 +34,7 @@ class Manager:
         while self.status:
             # TODO：いい感じに変える
             if not self.__is_market_open():
-                print("market is closed")
-                time.sleep(300)
+                self.__wait_while_market_close()
                 continue
             try:
                 # TODO：なんかネストがすごいな。。。
@@ -74,6 +72,10 @@ class Manager:
     # #######
     # private
     # #######
+
+    def __wait_while_market_close(self, sec=300):
+        print("market is closed")
+        time.sleep(sec)
 
     def __is_market_open(self):
         market_open = time(7)
