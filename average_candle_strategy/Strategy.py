@@ -19,9 +19,6 @@ class Strategy:
     LOSS_CUT_RNAGE = 0.01  # 転換足の高安値に加えるロスカット幅
     DECISION_NUM = 2  # ロウソク本数の範囲
 
-    def __init__(self):
-        self.client = API(access_token=ACCESS_TOKEN, environment=TRADE_ENV)
-
     # 指定した範囲の中で転換足が一定数出現したか
     # count = 転換足の本数
     def is_multi_diversion(self, avg_candle_df, count=2):
