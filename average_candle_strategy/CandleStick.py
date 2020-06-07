@@ -1,16 +1,7 @@
 import pandas as pd
 import json
-# candle情報の取得
-import oandapyV20.endpoints.instruments as instruments
-# 現在価格の取得
-from oandapyV20.endpoints.pricing import PricingInfo
-# 現在価格の取得(0.25秒の価格データを４つセットで返す)
-from oandapyV20.endpoints.pricing import PricingStream
-from oandapyV20 import API
-from oandapyV20.exceptions import V20Error
-
 # user defined
-from average_candle_strategy.CommonParams import ACCOUNT_ID, ACCESS_TOKEN, TRADE_ENV
+from average_candle_strategy.oandaAPI.CandleStickAPI import CandleStickAPI
 
 """
 現在・過去価格の取得
@@ -20,8 +11,8 @@ from average_candle_strategy.CommonParams import ACCOUNT_ID, ACCESS_TOKEN, TRADE
 # TODO：ここcandleのデータのみを保持するdata_objと振る舞い分離した方がすっきりする？
 class CandleStick:
     def __init__(self, instrument, time_frame):
-        self.client = API(access_token=ACCESS_TOKEN, environment=TRADE_ENV)
         self.instrument = instrument
+        # TODO:バラしてAPI側に寄せるorobjとして切り出す
         self.config = {
             "params": {"granularity": time_frame, "count": 4, "price": "B"},
             "instrument": instrument,
@@ -31,10 +22,7 @@ class CandleStick:
 
     # 現在価格のgenerator_objを返す
     def streaming_price(self):
-        pricing_info = PricingStream(accountID=ACCOUNT_ID, params={
-            "instruments": self.instrument})
-
-        return self.client.request(pricing_info)
+        return CandleStickAPI().request(self.instrument)
 
     # 過去のロウソク足データ取得
     def fixed_candle_df(self):
@@ -63,15 +51,7 @@ class CandleStick:
     # #######
 
     def __fixed_candle_data(self):
-        instruments_candles = instruments.InstrumentsCandles(
-            instrument=self.config["instrument"], params=self.config["params"])
-
-        try:
-            self.client.request(instruments_candles)
-        except V20Error as e:
-            print("Error: {}".format(e))
-
-        return instruments_candles.response
+        return CandleStickAPI().fixed_candle_data(self.config["instrument"], self.config["params"])
 
     def __cleaning_and_to_df(self, data):  # df化と成形
         result = pd.json_normalize(data["candles"])
@@ -86,7 +66,6 @@ class CandleStick:
 
     def __first_avg_candle_row(self, prev_row, self_row):
         # 引数は暗黙的に固定：prev_row df.iloc[0] , self_row = df.iloc[1]
-
         open = round(((prev_row["open"] + prev_row["high"] +
                        prev_row["low"] + prev_row["close"]) / 4), 3)
         high = self_row["high"]
@@ -98,7 +77,6 @@ class CandleStick:
 
     def __avg_candle_row(self, prev_row, self_row):
         # prev_row = １つ前の平均足、self_row = 自身のロウソク足
-
         open = round(((prev_row["open"] + prev_row["close"]) / 2), 3)
         close = round(((self_row["open"] + self_row["high"] +
                         self_row["low"] + self_row["close"]) / 4), 3)
