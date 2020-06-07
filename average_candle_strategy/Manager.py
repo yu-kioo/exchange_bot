@@ -26,11 +26,8 @@ class Manager:
             print("market is closed")
             time.sleep(300)
             continue
-        # TODO:不必要なfield化なくす
         self.status = True
         self.candle_stick = CandleStick(USD_JPY, "M5")
-        self.strategy = Strategy()
-        self.trader = Trader()
 
     def run(self):
         print("*** execute process... ***")
@@ -48,12 +45,12 @@ class Manager:
                         print(
                             f"*** current price：{line['bids'][0]['price']} ***")
 
-                        if self.trader.has_open_positions():
+                        if Trader().has_open_positions():
                             print("*** you have open positions ***")
                             # pendingの指値注文があった場合キャンセル
-                            if self.trader.has_pending_limit_orders():
-                                for id in self.trader.pending_limit_order_ids():
-                                    self.trader.cancel_order(id)
+                            if Trader().has_pending_limit_orders():
+                                for id in Trader().pending_limit_order_ids():
+                                    Trader().cancel_order(id)
                                     print(f"*** canceled order：{id} ***")
                             continue
                         # TODO：データ更新の実行はエントリー足の間隔でいい
@@ -95,13 +92,13 @@ class Manager:
 
     # strategyの判定実行
     def __can_entry(self):
-        return self.strategy.is_multi_diversion(self.candle_stick.avg_candles)
+        return Strategy().is_multi_diversion(self.candle_stick.avg_candles)
 
     # entry実行
     def __entry(self):
-        e_price = self.strategy.entry_price(self.candle_stick.avg_candles)
-        p_price = self.strategy.profit_price(self.candle_stick.avg_candles)
-        l_price = self.strategy.loss_cut_price(self.candle_stick.avg_candles)
+        e_price = Strategy().entry_price(self.candle_stick.avg_candles)
+        p_price = Strategy().profit_price(self.candle_stick.avg_candles)
+        l_price = Strategy().loss_cut_price(self.candle_stick.avg_candles)
 
         buy_data = OrderData(USD_JPY, BUY, self.LOT).limit_order(
             str(e_price["buy"]), str(p_price["buy"]), str(l_price["buy"]))
@@ -114,5 +111,5 @@ class Manager:
         print(sell_data)
 
         # 発注
-        self.trader.order(buy_data)
-        self.trader.order(sell_data)
+        Trader().order(buy_data)
+        Trader().order(sell_data)
