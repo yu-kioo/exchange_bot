@@ -23,7 +23,6 @@ class OrderData:
         return self.data
 
     # 指値注文
-
     def limit_order(self, limit_price, profit_price, loss_price):
         self.data["order"]["type"] = ORDER_TYPE["LIMIT"]
         self.data["order"]["price"] = limit_price

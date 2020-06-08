@@ -28,6 +28,7 @@ class Manager:
         self.status = True
         self.candle_stick = CandleStick(USD_JPY, "M5")
 
+    # TODO：private methodに切り出してく
     def run(self):
         print("*** execute process... ***")
         err_count = 0
@@ -104,7 +105,7 @@ class Manager:
 
         buy_data = OrderData(USD_JPY, BUY, self.LOT).limit_order(
             str(e_price["buy"]), str(p_price["buy"]), str(l_price["buy"]))
-        sell_data = OrderData(USD_JPY, BUY, self.LOT).limit_order(
+        sell_data = OrderData(USD_JPY, SELL, self.LOT).limit_order(
             str(e_price["sell"]), str(p_price["sell"]), str(l_price["sell"]))
 
         print(">>> buy_data")
