@@ -33,4 +33,4 @@ class CandleStickAPI(Base):
     # #######
 
     def __request(self, req_obj):
-        self.client.request(req_obj)
+        return self.client.request(req_obj)

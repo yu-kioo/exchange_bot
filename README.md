@@ -6,6 +6,13 @@
 ## 以下ただのメモでしかない
 ***
 
+## 環境構築
+```
+cd ~/exchange_bot
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## 開発環境立ち上げ
 - `python app.py`
 

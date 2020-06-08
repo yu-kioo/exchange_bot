@@ -22,7 +22,7 @@ class CandleStick:
 
     # 現在価格のgenerator_objを返す
     def streaming_price(self):
-        return CandleStickAPI().request(self.instrument)
+        return CandleStickAPI().streaming_price(self.instrument)
 
     # 過去のロウソク足データ取得
     def fixed_candle_df(self):
