@@ -1,6 +1,6 @@
 import pandas as pd
 import json
-import time
+import time as t
 from datetime import datetime, date, time, timedelta, timezone
 from oandapyV20.exceptions import V20Error
 
@@ -76,7 +76,7 @@ class Manager:
 
     def __wait_while_market_close(self, sec=300):
         print("market is closed")
-        time.sleep(sec)
+        t.sleep(sec)
 
     def __is_market_open(self):
         market_open = time(7)
