@@ -10,10 +10,11 @@ class TradeAPI(Base):
     def __init__(self):
         super().__init__()
 
-    # __open_positions
     def order(self, req_data):
         req = orders.OrderCreate(ACCOUNT_ID, data=req_data)
         self.__request(req)
+        print(">>> order")
+        print(req.response)
         return req.response
 
     def pending_orders(self):

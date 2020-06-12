@@ -13,10 +13,7 @@ from average_candle_strategy.oandaAPI.TradeAPI import TradeAPI
 class Trader:
     # 発注
     def order(self, data):
-        print(">>> Trader::order")
-        res = TradeAPI().order(data)
-        print(">>> response")
-        print(res)
+        return TradeAPI().order(data)
 
     def has_open_positions(self):
         return len(self.__open_positions()["positions"]) > 0
@@ -24,8 +21,8 @@ class Trader:
     def has_pending_orders(self):
         return not (len(self.pending_order_ids()) == 0)
 
-    def has_pending_limit_orders(self):
-        return not (len(self.pending_limit_order_ids()) == 0)
+    def has_pending_stop_orders(self):
+        return not (len(self.pending_stop_order_ids()) == 0)
 
     # 未成約注文
     def pending_order_ids(self):
@@ -33,11 +30,11 @@ class Trader:
         result = [x["id"] for x in res["orders"]]
         return result
 
-    # 未成約指値注文
-    def pending_limit_order_ids(self):
+    # 未成約逆指値注文
+    def pending_stop_order_ids(self):
         res = TradeAPI().pending_orders()
         result = [
-            x["id"]for x in res["orders"] if x["type"] == ORDER_TYPE["LIMIT"]
+            x["id"]for x in res["orders"] if x["type"] == ORDER_TYPE["STOP"]
         ]
         return result
 

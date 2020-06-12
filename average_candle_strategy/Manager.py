@@ -41,17 +41,22 @@ class Manager:
                 # TODO：なんかネストがすごいな。。。
                 for line in self.candle_stick.streaming_price():
                     if ("bids" in line):  # 価格が更新されてたら
-                        print(
-                            f"*** current price：{line['bids'][0]['price']} ***")
 
                         if Trader().has_open_positions():
                             print("*** you have open positions ***")
                             # pendingの指値注文があった場合キャンセル
-                            if Trader().has_pending_limit_orders():
-                                for id in Trader().pending_limit_order_ids():
+                            if Trader().has_pending_stop_orders():
+                                for id in Trader().pending_stop_order_ids():
                                     Trader().cancel_order(id)
                                     print(f"*** canceled order：{id} ***")
                             continue
+
+                        if Trader().has_pending_stop_orders():
+                            print("*** you have stop orders ***")
+                            continue
+
+                        print(f"*** current price：{line['bids'][0]['price']} ***")
+
                         # TODO：データ更新の実行はエントリー足の間隔でいい
                         # fixed_candle, avg_candleのデータ更新
                         self.candle_stick.fixed_candle_df()
@@ -103,9 +108,9 @@ class Manager:
         p_price = Strategy().profit_price(self.candle_stick.avg_candles)
         l_price = Strategy().loss_cut_price(self.candle_stick.avg_candles)
 
-        buy_data = OrderData(USD_JPY, BUY, self.LOT).limit_order(
+        buy_data = OrderData(USD_JPY, BUY, self.LOT).stop_order(
             str(e_price["buy"]), str(p_price["buy"]), str(l_price["buy"]))
-        sell_data = OrderData(USD_JPY, SELL, self.LOT).limit_order(
+        sell_data = OrderData(USD_JPY, SELL, self.LOT).stop_order(
             str(e_price["sell"]), str(p_price["sell"]), str(l_price["sell"]))
 
         print(">>> buy_data")

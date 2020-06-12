@@ -22,9 +22,9 @@ class OrderData:
         self.data["order"]["type"] = ORDER_TYPE["MARKET"]
         return self.data
 
-    # 指値注文
-    def limit_order(self, limit_price, profit_price, loss_price):
-        self.data["order"]["type"] = ORDER_TYPE["LIMIT"]
+    # 逆指値注文
+    def stop_order(self, limit_price, profit_price, loss_price):
+        self.data["order"]["type"] = ORDER_TYPE["STOP"]
         self.data["order"]["price"] = limit_price
         self.data["order"]["takeProfitOnFill"] = {"price": profit_price}
         self.data["order"]["stopLossOnFill"] = {"price": loss_price}
