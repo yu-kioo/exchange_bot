@@ -14,7 +14,7 @@ class CandleStick:
         self.instrument = instrument
         # TODO:バラしてAPI側に寄せるorobjとして切り出す
         self.config = {
-            "params": {"granularity": time_frame, "count": 4, "price": "B"},
+            "params": {"granularity": time_frame, "count": 5, "price": "B"},
             "instrument": instrument,
         }
         self.fixed_candles = self.fixed_candle_df()
@@ -24,7 +24,7 @@ class CandleStick:
     def streaming_price(self):
         return CandleStickAPI().streaming_price(self.instrument)
 
-    # 過去のロウソク足データ取得
+    # 過去のロウソク足データ取得(未確定の足も入る)
     def fixed_candle_df(self):
         data = self.__fixed_candle_data()
         self.fixed_candles = self.__cleaning_and_to_df(data)
@@ -43,6 +43,7 @@ class CandleStick:
         # 作成した構造体をdfにする
         result = pd.DataFrame(data)
         result["time"] = self.fixed_candles["time"]
+        result.drop(result.index.values[-1]) # 末尾の未確定足を削除
         self.avg_candles = result
         return result
 
