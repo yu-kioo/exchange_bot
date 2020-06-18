@@ -43,7 +43,7 @@ class CandleStick:
         # 作成した構造体をdfにする
         result = pd.DataFrame(data)
         result["time"] = self.fixed_candles["time"]
-        result.drop(result.index.values[-1]) # 末尾の未確定足を削除
+        result = result.drop(result.index.values[-1]) # 末尾の未確定足を削除
         self.avg_candles = result
         return result
 
