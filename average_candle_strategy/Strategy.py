@@ -35,9 +35,13 @@ class Strategy:
     # エントリーラインを定める
     def entry_price(self, avg_candle_df):
         ids = self.__diversion_ids(avg_candle_df)
+        print(f"ids = {ids}")
 
         high_price = [avg_candle_df.iloc[i].high for i in ids]
+        print(f"high_price = {high_price}")
+
         low_price = [avg_candle_df.iloc[i].low for i in ids]
+        print(f"low_price = {low_price}")
 
         return {"buy": round(max(high_price) + self.ENTRY_RANGE, 3), "sell": round(min(low_price) - self.ENTRY_RANGE, 3)}
 
