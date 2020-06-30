@@ -14,7 +14,7 @@ class CandleStick:
         self.instrument = instrument
         # TODO:バラしてAPI側に寄せるorobjとして切り出す
         self.config = {
-            "params": {"granularity": time_frame, "count": 5, "price": "B"},
+            "params": {"granularity": time_frame, "count": 5, "price": "M"},
             "instrument": instrument,
         }
         self.fixed_candles = self.fixed_candle_df()
@@ -58,7 +58,7 @@ class CandleStick:
         result = pd.json_normalize(data["candles"])
 
         result = result.rename(
-            columns={"bid.o": "open", "bid.h": "high", "bid.l": "low", "bid.c": "close"})
+            columns={"mid.o": "open", "mid.h": "high", "mid.l": "low", "mid.c": "close"})
         result = result.astype(
             {"open": float, "high": float, "low": float, "close": float})
         result["time"] = pd.to_datetime(result["time"])
@@ -73,7 +73,7 @@ class CandleStick:
         low = self_row["low"]
         close = round(((self_row["open"] + self_row["high"] +
                         self_row["low"] + self_row["close"]) / 4), 3)
-        # TODO：python3.7以下ではdictの順序保持しないからorderDict使う？
+
         return {"open": open, "high": high, "low": low, "close": close}
 
     def __avg_candle_row(self, prev_row, self_row):
