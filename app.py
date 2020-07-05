@@ -1,7 +1,9 @@
-from concurrent.futures import ThreadPoolExecutor
 from flask import Flask, request, make_response
+import click
+from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
+import requests
 
 # user_defined
 from average_candle_strategy.Manager import Manager
@@ -59,7 +61,21 @@ def stop_avg_candle_strategy():
 
 @app.route("/thread/running")
 def running_threads():
-    return jobs.keys
+    return f"running thread: {_running_thread_keys()}"
+
+
+def _running_thread_keys():
+    return list(jobs.keys())
+
+
+# custom command
+@app.cli.command("run-threads")
+def run_thread():
+    keys = _running_thread_keys()
+    if not keys:
+        requests.get(
+            "https://exchange-trading-bot.herokuapp.com/average_candle_strategy/start"
+        )
 
 
 # おまじない
